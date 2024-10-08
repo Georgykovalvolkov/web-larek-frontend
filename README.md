@@ -56,14 +56,16 @@ interface IProduct {
 }
 ```
 
-Данные покупателя
+Данные заказа
 
 ```
-interface IUser {
-    payMethod: string;
+interface IOrder {
+    payMethod: TPayMethod
     address: string;
     email: string;
     phone: string;
+    total: number
+    items: string[]
 }
 ```
 
@@ -88,35 +90,30 @@ interface IBasket {
 }
 ```
 
-Данные карточки, используемые для карточки на основной странице
-
-```
-type TProductMain = Pick<IProduct, 'image' | 'title' | 'category' | 'price'>;
-```
-
-Данные карточки, используемые в модальном окне карточки
-
-```
-type TProductModal = Pick<IProduct, 'description' | 'image' | 'title' | 'category' | 'price'>;
-```
-
-Данные карточки, используемые в корзине
-
-```
-type TBasket = Pick<IProduct, 'title' | 'price'>;
-```
-
 Данные метода оплаты
 
 ```
-type TPayMethod = Pick<IUser, 'payMethod'>;
+type TPayMethod = 'cash' | 'card'
 ```
 
-Данные покупателя, используемые в окне с вводом email и номера телефона
+Данные юзера
 
 ```
-type TUserData = Pick<IUser, 'address' | 'email' | 'phone'>;
+type TUserData = Pick<IOrder, 'email' | 'phone' | 'address' | 'payMethod'>;
 ```
+
+Данные метода оплаты и адреса
+
+```
+type TPayData = Pick<IOrder, 'address' | 'payMethod'>;
+```
+
+Данные почты и телефона
+
+```
+type TEmailData = Pick<IOrder, 'email' | 'phone'>;
+```
+
 
 
 ## Архитектура приложения
@@ -148,7 +145,6 @@ type TUserData = Pick<IUser, 'address' | 'email' | 'phone'>;
 Конструктор класса принимает инстант брокера событий
 В полях класса хранятся следующие данные:
 - _products: IProduct[] - массив объектов карточек товара
-- _preview: string | null - id карточки товара, выбранной для просмотра в модальном окне
 - events: IEvents - экземпляр класса `EventEmitter` для инициации событий при изменении данных.
 
 Так же класс предоставляет набор методов для взаимодействия с этими данными.
@@ -159,11 +155,10 @@ type TUserData = Pick<IUser, 'address' | 'email' | 'phone'>;
 Класс отвечает за хранение и логику работы с данными покупателя.\
 Конструктор класса принимает инстант брокера событий\
 В полях класса хранятся следующие данные:
-- _payMethod: string - метод оплаты, Онлайн или при получении
-- _address: string - адрес доставки
-- _email: string - данные электронной почты
-- _phone: string - данные телефонного номера
-
+- payMethod: TPayMethod - метод оплаты, Онлайн или при получении
+- address: string - адрес доставки
+- email: string - данные электронной почты
+- phone: string - данные телефонного номера
 - events: IEvents - экземпляр класса `EventEmitter` для инициации событий при изменении данных.
 
 Так же класс предоставляет набор методов для взаимодействия с этими данными.
@@ -171,18 +166,23 @@ type TUserData = Pick<IUser, 'address' | 'email' | 'phone'>;
 - getUserInfo(): TUserData - возвращает данные адреса, электронной почты и телефона юзера
 - setUserInfo(userData: IUser): void - сохраняет данные полученные от пользователя в классе
 - SetPayMethod(payMethod: string): void - отвечает за выбор метода оплаты и сохраняет его в классе.
-- checkValidation(data: Record<keyof TUserData, string>): boolean - проверяет объект с данными пользователя на валидность
+-  clearData(): void - очищает данные в классе.
 
 #### Класс BasketData
 Класс отвечает за хранение и логику работы с данными корзины с покупками.\
 Конструктор класса принимает инстант брокера событий\
 В полях класса хранятся следующие данные:
 - products: IProduct[] - массив объектов товара
-- product: string | null- id товара, добавленного в корзину
+- total: number - общая сумма покупок
+- events: IEvents - экземпляр класса `EventEmitter` для инициации событий при изменении данных.
 
 Так же класс предоставляет набор методов для взаимодействия с этими данными.
 - addProduct(product: IProduct): void; - добавляет один товар в начало массива и вызывает событие изменения массива
 - deleteProduct(productId: string): void; - удаляет карточку из массива.
+- checkProduct: (itemId: string) => boolean - проверяет наличие даннового товара в корзине по его id
+- clearBasket: () => void - очищает корзину
+- get total: () => number - возвращает общую сумму покупок
+- get products: () => IProduct[] - возвращает массив товаров в корзине
 
 ### Классы представления
 Все классы представления отвечают за отображение внутри контейнера (DOM-элемент) передаваемых в них данных.
@@ -327,6 +327,7 @@ type TUserData = Pick<IUser, 'address' | 'email' | 'phone'>;
 - modal:open - событие генерируемое при открытии модального окна
 - modal:close - событие генерируемое при закрытии модального окна
 - basket:open - событие генерируемое при открытии корзины
+- basket:clear - событие генерируемое при очистке корзины
 - product:add - событие генерируемое при добавлении товара в корзину
 - product:delete - событие генерируемое при удалении товара из корзины
 - making-order:open - событие генерируемое при окрытии окна формления заказа

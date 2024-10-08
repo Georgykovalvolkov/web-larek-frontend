@@ -1,52 +1,46 @@
 export interface IProduct {
-    _id: string;
+    id: string;
     description: string;
     image: string;
     title: string;
     category: string;
-    price: number;
+    price: number | null;
 }
 
-export interface IUser {
-    payMethod: string;
+export interface IOrder {
+    payMethod: TPayMethod;
     address: string;
     email: string;
     phone: string;
+    total: number;
+    items: string[];
 }
 
 export interface IProductsData {
-    cards: IProduct[];
-    preview: string | null;
-    getProduct(productId: string): IProduct;
+    products: IProduct[];
+    getProduct(productId: string): IProduct | undefined;
 }
 
 export interface IUSerData {
-    _payMethod: string;
-    _address: string;
-    _email: string;
-    _phone: string;
-    getPayMethod(): TPayMethod;
-    getUserInfo(): TUserData;
-    setUserInfo(userData: IUser): void;
-    SetPayMethod(payMethod: string): void;
-    checkValidation(data: Record<keyof TUserData, string>): boolean;
+    setPaymentAndDelivery(form: TPayData): void
+    setContactInfo(form: TEmailData): void
+    clearData(): void;
+    getUserData(): TUserData;
 }
 
 export interface IBasket {
     products: IProduct[];
-    product: string | null;
+    total: number;
     addProduct(product: IProduct): void;
     deleteProduct(productId: string): void;
-    priceCalc(productPrice: number): void;
+    checkProduct: (itemId: string) => boolean;
+    clearBasket: () => void;
 }
 
+export type TPayMethod = 'cash' | 'card';
 
-export type TCardMain = Pick<IProduct, 'image' | 'title' | 'category' | 'price'>;
+export type TUserData = Pick<IOrder, 'email' | 'phone' | 'address' | 'payMethod'>;
 
-export type TCardModal = Pick<IProduct, 'description' | 'image' | 'title' | 'category' | 'price'>;
+export type TPayData = Pick<IOrder, 'address' | 'payMethod'>;
 
-export type TBasket = Pick<IProduct, 'title' | 'price'>;
-
-export type TPayMethod = Pick<IUser, 'payMethod'>;
-
-export type TUserData = Pick<IUser, 'address' | 'email' | 'phone'>;
+export type TEmailData = Pick<IOrder, 'email' | 'phone'>;
