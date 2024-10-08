@@ -60,7 +60,7 @@ interface IProduct {
 
 ```
 interface IOrder {
-    payMethod: TPayMethod
+    payment: TPayMethod
     address: string;
     email: string;
     phone: string;
@@ -99,13 +99,13 @@ type TPayMethod = 'cash' | 'card'
 Данные юзера
 
 ```
-type TUserData = Pick<IOrder, 'email' | 'phone' | 'address' | 'payMethod'>;
+type TUserData = Pick<IOrder, 'email' | 'phone' | 'address' | 'payment'>;
 ```
 
 Данные метода оплаты и адреса
 
 ```
-type TPayData = Pick<IOrder, 'address' | 'payMethod'>;
+type TPayData = Pick<IOrder, 'address' | 'payment'>;
 ```
 
 Данные почты и телефона
@@ -155,7 +155,7 @@ type TEmailData = Pick<IOrder, 'email' | 'phone'>;
 Класс отвечает за хранение и логику работы с данными покупателя.\
 Конструктор класса принимает инстант брокера событий\
 В полях класса хранятся следующие данные:
-- payMethod: TPayMethod - метод оплаты, Онлайн или при получении
+- payment: TPayMethod - метод оплаты, Онлайн или при получении
 - address: string - адрес доставки
 - email: string - данные электронной почты
 - phone: string - данные телефонного номера

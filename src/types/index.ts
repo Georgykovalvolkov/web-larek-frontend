@@ -8,7 +8,7 @@ export interface IProduct {
 }
 
 export interface IOrder {
-    payMethod: TPayMethod;
+    payment: TPayMethod;
     address: string;
     email: string;
     phone: string;
@@ -39,8 +39,16 @@ export interface IBasket {
 
 export type TPayMethod = 'cash' | 'card';
 
-export type TUserData = Pick<IOrder, 'email' | 'phone' | 'address' | 'payMethod'>;
+export type TUserData = Pick<IOrder, 'email' | 'phone' | 'address' | 'payment'>;
 
-export type TPayData = Pick<IOrder, 'address' | 'payMethod'>;
+export type TPayData = Pick<IOrder, 'address' | 'payment'>;
 
 export type TEmailData = Pick<IOrder, 'email' | 'phone'>;
+
+export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+
+export interface IApi {
+    baseUrl: string;
+    get<T>(uri: string): Promise<T>;
+    post<T>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
+}

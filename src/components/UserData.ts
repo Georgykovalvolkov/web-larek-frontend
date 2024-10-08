@@ -2,7 +2,7 @@ import {IUSerData, TPayMethod, TUserData, TPayData, TEmailData } from "../types"
 import { IEvents } from "./base/events";
 
 export class UserData implements IUSerData {
-    private payMethod: TPayMethod;
+    private payment: TPayMethod;
     private address: string;
     private email: string;
     private phone: string;
@@ -13,7 +13,7 @@ export class UserData implements IUSerData {
     }
 
     setPaymentAndDelivery(form: TPayData): void {
-        this.payMethod = form.payMethod as TPayMethod;
+        this.payment = form.payment as TPayMethod;
         this.address = form.address;
         this.events.emit('addres:submit');
     }
@@ -25,7 +25,7 @@ export class UserData implements IUSerData {
     }
 
     clearData(): void {
-		this.payMethod = null;
+		this.payment = null;
 		this.address = '';
 		this.email = '';
 		this.phone = '';
@@ -33,7 +33,7 @@ export class UserData implements IUSerData {
 
     getUserData(): TUserData {
         const UserData: TUserData = {
-			payMethod: this.payMethod,
+			payment: this.payment,
 			address: this.address,
 			email: this.email,
 			phone: this.phone,
