@@ -1,8 +1,10 @@
 import { IProduct } from "../types";
 import { CDN_URL } from "../utils/constants";
 import { IEvents } from "./base/events";
+import { cloneTemplate } from "../utils/utils";
 
 export class Card {
+	protected element: HTMLElement;
     protected cardId: string;
     protected cardTitle: HTMLElement;
     protected cardImage: HTMLImageElement;
@@ -15,20 +17,21 @@ export class Card {
     protected index: HTMLElement;
     protected events: IEvents;
 
-    constructor(protected container: HTMLTemplateElement, events: IEvents) {
+    constructor(template: HTMLTemplateElement, events: IEvents) {
         this.events = events;
+		this.element = cloneTemplate(template);
 
-        this.cardTitle = this.container.querySelector('.card__title');
-        this.cardImage = this.container.querySelector('.card__image');
-        this.cardPrice = this.container.querySelector('.card__price');
-        this.cardCategory = this.container.querySelector('.card__category');
-        this.cardText = this.container.querySelector('.card__text');
-        this.addBasketButton = this.container.querySelector('.button');
-        this.removeBasketButton = this.container.querySelector('.basket__item-delete');
-        this.index = this.container.querySelector('.basket__item-index');
+        this.cardTitle = this.element.querySelector('.card__title');
+        this.cardImage = this.element.querySelector('.card__image');
+        this.cardPrice = this.element.querySelector('.card__price');
+        this.cardCategory = this.element.querySelector('.card__category');
+        this.cardText = this.element.querySelector('.card__text');
+        this.addBasketButton = this.element.querySelector('.button');
+        this.removeBasketButton = this.element.querySelector('.basket__item-delete');
+        this.index = this.element.querySelector('.basket__item-index');
 
-        if (this.container.classList.contains('gallery__item')) {
-			this.container.addEventListener('click', () =>
+        if (this.element.classList.contains('gallery__item')) {
+			this.element.addEventListener('click', () =>
 				this.events.emit('product:add', { card: this })
 			);
 		}
@@ -83,6 +86,7 @@ export class Card {
 			this.cardCategory.classList.add(this.cardCategorySelector);
 			this.cardCategory.textContent = cardData.category;
 		}
+		console.log(this.cardTitle);
 		this.cardTitle.textContent = cardData.title;
 		if (this.cardText) {
 			this.cardText.textContent = cardData.description;
@@ -102,8 +106,8 @@ export class Card {
 		this.checkInBasket(inBasket);
 	}
 
-	render(): HTMLTemplateElement {
-		return this.container;
+	render() {
+		return this.element;
 	}
 
 	get _id(): string {

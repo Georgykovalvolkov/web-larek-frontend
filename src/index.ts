@@ -7,6 +7,8 @@ import { IApi, TPayMethod } from './types';
 import { Api } from './components/base/api';
 import { API_URL, settings } from './utils/constants';
 import { AppApi } from './components/AppApi';
+import { Card } from './components/Card';
+import { cloneTemplate, ensureElement } from './utils/utils';
 
 
 
@@ -119,23 +121,9 @@ const basketData = new BasketData(events);
 // console.log(userData.getUserData()); //тестируем геттер пользователя
 // console.log(userData.clearData()); //тестируем сеттер пользователя
 
-// const product1 = {
-//     "id": "c101ab44-ed99-4a54-990d-47aa2bb4e7d9",
-//     "description": "Лизните этот леденец, чтобы мгновенно запоминать и узнавать любой цветовой код CSS.",
-//     "image": "/Shell.svg",
-//     "title": "HEX-леденец",
-//     "category": "другое",
-//     "price": 1450
-// };
 
-// const product2 = {
-//     "id": "412bcf81-7e75-4e70-bdb9-d3c73c9803b7",
-//     "description": "Откройте эти куки, чтобы узнать, какой фреймворк вы должны изучить дальше.",
-//     "image": "/Soft_Flower.svg",
-//     "title": "Фреймворк куки судьбы",
-//     "category": "дополнительное",
-//     "price": 2500
-// };
+
+
 
 // basketData.addProduct(product1); //тестируем метод добавления продукта в корзину
 // console.log(basketData.products); //тестируем геттер корзины
@@ -181,3 +169,33 @@ Promise.all([api.getProducts(), api.getProduct(tesrId2), api.postOrder(testOrder
     .catch((err) => {
         console.error(err);
     })
+    const product1 = {
+        "id": "c101ab44-ed99-4a54-990d-47aa2bb4e7d9",
+        "description": "Лизните этот леденец, чтобы мгновенно запоминать и узнавать любой цветовой код CSS.",
+        "image": "/Shell.svg",
+        "title": "HEX-леденец",
+        "category": "другое",
+        "price": 1450
+     };
+
+     const product2 = {
+     "id": "412bcf81-7e75-4e70-bdb9-d3c73c9803b7",
+    "description": "Откройте эти куки, чтобы узнать, какой фреймворк вы должны изучить дальше.",
+    "image": "/Soft_Flower.svg",
+    "title": "Фреймворк куки судьбы",
+    "category": "дополнительное",
+     "price": 2500
+ };
+
+    const testSection = document.querySelector('.gallery');
+    const cardTemplate = document.querySelector('#card-preview') as HTMLTemplateElement;
+    
+    const card = new Card(cardTemplate, events); //создаем экземпляр карточки
+    card.setData(product2); //даем карточке данные
+    testSection.append(card.render());
+
+    const valid1 = true;
+    const valid2 = false;
+
+    card.checkInBasket(valid2);
+    card.setAndCheck(product1, valid2);
