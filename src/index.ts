@@ -8,7 +8,8 @@ import { Api } from './components/base/api';
 import { API_URL, settings } from './utils/constants';
 import { AppApi } from './components/AppApi';
 import { Card } from './components/Card';
-import { cloneTemplate, ensureElement } from './utils/utils';
+import { IProduct } from './types';
+import { CardsCatalog } from './components/CardsCatalog';
 
 
 
@@ -187,15 +188,45 @@ Promise.all([api.getProducts(), api.getProduct(tesrId2), api.postOrder(testOrder
      "price": 2500
  };
 
-    const testSection = document.querySelector('.gallery');
-    const cardTemplate = document.querySelector('#card-preview') as HTMLTemplateElement;
+ const product3: IProduct = {
+         "id": "b06cde61-912f-4663-9751-09956c0eed67",
+         "description": "Будет стоять над душой и не давать прокрастинировать.",
+         "image": "/Asterisk_2.svg",
+         "title": "Мамка-таймер",
+         "category": "софт-скил",
+         "price": null
+};
+
+    const testSection = document.querySelector('.gallery') as HTMLElement;
+    const cardTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement;
     
     const card = new Card(cardTemplate, events); //создаем экземпляр карточки
-    card.setData(product2); //даем карточке данные
-    testSection.append(card.render());
+    const card2 = new Card(cardTemplate, events); //создаем ещё одну карточку
+    const card3 = new Card(cardTemplate, events); //создаем ещё одну карточку
 
-    const valid1 = true;
-    const valid2 = false;
+    const cardsCatalog = new CardsCatalog(testSection); //создаем экземпляр каталога карточек
+      
 
-    card.checkInBasket(valid2);
-    card.setAndCheck(product1, valid2);
+    card.setData(product1); //даем карточке данные
+    card2.setData(product2);
+    card3.setData(product3);
+
+    const cardArray = [];
+
+    cardArray.push(card.render()); //рендерим карточку
+    cardArray.push(card2.render());
+    cardArray.push(card3.render());
+
+    cardsCatalog.render(cardArray);
+    
+
+
+    // const valid1 = true;
+    // const valid2 = false;
+
+    // card.checkInBasket(valid2);
+    // card.setAndCheck(product3, valid2);
+
+    // events.onAll((event) => {
+    //     console.log(event);
+    // });

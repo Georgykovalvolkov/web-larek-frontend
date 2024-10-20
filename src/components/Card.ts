@@ -32,7 +32,7 @@ export class Card {
 
         if (this.element.classList.contains('gallery__item')) {
 			this.element.addEventListener('click', () =>
-				this.events.emit('product:add', { card: this })
+				this.events.emit('product:preview', { card: this })
 			);
 		}
 
