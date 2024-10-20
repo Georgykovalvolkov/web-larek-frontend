@@ -10,6 +10,7 @@ import { AppApi } from './components/AppApi';
 import { Card } from './components/Card';
 import { IProduct } from './types';
 import { CardsCatalog } from './components/CardsCatalog';
+import { CardsBasket } from './components/CardsBasket';
 
 
 
@@ -198,7 +199,7 @@ Promise.all([api.getProducts(), api.getProduct(tesrId2), api.postOrder(testOrder
 };
 
     const testSection = document.querySelector('.gallery') as HTMLElement;
-    const cardTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement;
+    const cardTemplate = document.querySelector('#card-basket') as HTMLTemplateElement;
     
     const card = new Card(cardTemplate, events); //создаем экземпляр карточки
     const card2 = new Card(cardTemplate, events); //создаем ещё одну карточку
@@ -209,15 +210,25 @@ Promise.all([api.getProducts(), api.getProduct(tesrId2), api.postOrder(testOrder
 
     card.setData(product1); //даем карточке данные
     card2.setData(product2);
-    card3.setData(product3);
+  
 
     const cardArray = [];
 
     cardArray.push(card.render()); //рендерим карточку
     cardArray.push(card2.render());
-    cardArray.push(card3.render());
+   
 
-    cardsCatalog.render(cardArray);
+    basketData.addProduct(product1);
+    basketData.addProduct(product2);
+
+    const total = basketData.total;
+
+    const basketTemplate = document.getElementById('basket') as HTMLTemplateElement;
+    const basket = new CardsBasket(basketTemplate, events);
+
+    testSection.appendChild(basket.render(cardArray, total));
+
+    // cardsCatalog.render(cardArray);
     
 
 
@@ -227,6 +238,9 @@ Promise.all([api.getProducts(), api.getProduct(tesrId2), api.postOrder(testOrder
     // card.checkInBasket(valid2);
     // card.setAndCheck(product3, valid2);
 
-    // events.onAll((event) => {
-    //     console.log(event);
-    // });
+    events.onAll((event) => {
+        console.log(event);
+    });
+
+    
+
