@@ -7,8 +7,9 @@ export class CardsBasket {
 	protected basketButton: HTMLButtonElement;
     protected content: HTMLElement;
 	protected basketPrice: HTMLSpanElement;
+	protected template: HTMLTemplateElement
 
-	constructor(protected template: HTMLTemplateElement, events: IEvents) {
+	constructor(template: HTMLTemplateElement, events: IEvents) {
         this.events = events;
 		this.element = cloneTemplate(template);
 
