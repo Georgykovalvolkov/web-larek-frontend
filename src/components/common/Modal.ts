@@ -8,10 +8,10 @@ export class Modal {
     protected events: IEvents;
     protected page: HTMLElement;
     
-	constructor(container: HTMLElement, events: IEvents) {
+	constructor(container: HTMLElement, page: HTMLElement, events: IEvents) {
         this.events = events;
-        this.page = document.querySelector('.page__wrapper');
-
+        this.page = page;
+	
 		this.closeButton = ensureElement<HTMLButtonElement>(
 			'.modal__close',
 			container

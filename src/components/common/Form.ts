@@ -1,35 +1,37 @@
 import { ensureElement } from '../../utils/utils';
 import { IEvents } from '../base/events';
+import { cloneTemplate } from '../../utils/utils';
 
-export class ModalWithForm {
+export class Form {
 	protected submitButton: HTMLButtonElement;
-	protected error: HTMLElement;
+	protected inputError: HTMLElement;
     protected container: HTMLFormElement;
     protected events: IEvents
-	constructor(container: HTMLFormElement, events: IEvents) {
+	constructor(template: HTMLTemplateElement, events: IEvents) {
         this.events = events;
-        
+        this.container = cloneTemplate(template)
+
 		const modalActions = ensureElement<HTMLDivElement>(
 			'.modal__actions',
-			container
+			this.container
 		);
 		this.submitButton = ensureElement<HTMLButtonElement>(
 			'.button',
 			modalActions
 		);
-		this.error = ensureElement<HTMLElement>('.form__errors', modalActions);
-		container.addEventListener('submit', (event: InputEvent) => {
+		this.inputError = ensureElement<HTMLElement>('.form__errors', modalActions);
+		this.container.addEventListener('submit', (event: InputEvent) => {
 			event.preventDefault();
 			this.events.emit('formOrder:submit', { formOrder: this });
 		});
 	}
 
-	protected showInputError(): void {
-		this.error.textContent = 'Заполните поля';
+	showInputError(): void {
+		this.inputError.textContent = 'Заполните пустые поля';
 		this.submitButton.disabled = true;
 	}
-	protected hideInputError(): void {
-		this.error.textContent = '';
+	hideInputError(): void {
+		this.inputError.textContent = '';
 		this.submitButton.disabled = false;
 	}
 	render(): HTMLFormElement {

@@ -7,8 +7,8 @@ export class AppApi {
 		this._baseApi = baseApi;
 	}
 
-	getProducts(): Promise<IProduct[]> {
-		return this._baseApi.get<IProduct[]>(`/product`).then((products: IProduct[]) => products);
+	getProducts(): Promise<{ total: number; items: IProduct[] }> {
+		return this._baseApi.get<{ total: number; items: IProduct[] }>(`/product`);
 	}
 
 	getProduct(productId: string): Promise<IProduct> {
