@@ -20,7 +20,7 @@ export class Card {
     constructor(template: HTMLTemplateElement, events: IEvents) {
         this.events = events;
 		this.element = cloneTemplate(template);
-
+		
         this.cardTitle = this.element.querySelector('.card__title');
         this.cardImage = this.element.querySelector('.card__image');
         this.cardPrice = this.element.querySelector('.card__price');
@@ -31,9 +31,10 @@ export class Card {
         this.index = this.element.querySelector('.basket__item-index');
 
         if (this.element.classList.contains('gallery__item')) {
-			this.element.addEventListener('click', () =>
-				this.events.emit('product:preview', { card: this })
-			);
+			this.element.addEventListener('click', () => {
+				console.log('Card clicked:', this);  // Отладочное сообщение
+				this.events.emit('product:preview', { card: this });
+			});
 		}
 
 		if (this.removeBasketButton) {
@@ -86,7 +87,7 @@ export class Card {
 			this.cardCategory.classList.add(this.cardCategorySelector);
 			this.cardCategory.textContent = cardData.category;
 		}
-		console.log(this.cardTitle);
+		
 		this.cardTitle.textContent = cardData.title;
 		if (this.cardText) {
 			this.cardText.textContent = cardData.description;

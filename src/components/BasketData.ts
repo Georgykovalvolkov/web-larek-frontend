@@ -13,7 +13,7 @@ export class BasketData implements IBasket {
 
     addProduct(product: IProduct): void {
         this.products.push(product);
-        this.events.emit("product:add");
+        this.events.emit("basket:changed");
     }
 
     deleteProduct(productId: string): void {
@@ -21,13 +21,13 @@ export class BasketData implements IBasket {
         if (productIndex >= 0) {
             this.products.splice(productIndex, 1);
         }
-        this.events.emit("product:delete");
+        this.events.emit("basket:changed");
     }
 
     clearBasket(): void {
         this._products = [];
         this._total = 0;
-        this.events.emit("basket:clear");
+        this.events.emit("basket:changed");
     }
 
     checkProduct(itemId: string): boolean {

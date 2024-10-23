@@ -1,4 +1,4 @@
-import {IUSerData, TPayMethod, TUserData, TPayData, TEmailData } from "../types";
+import {IUSerData, TPayMethod, TUserData } from "../types";
 import { IEvents } from "./base/events";
 
 export class UserData implements IUSerData {
@@ -12,13 +12,13 @@ export class UserData implements IUSerData {
         this.events = events;
     }
 
-    setPaymentAndDelivery(form: TPayData): void {
+    setPaymentAndDelivery(form: Record<string, string>): void {
         this.payment = form.payment as TPayMethod;
         this.address = form.address;
         this.events.emit('addres:submit');
     }
 
-    setContactInfo(form: TEmailData): void {
+    setContactInfo(form: Record<string, string>): void {
         this.email = form.email;
         this.phone = form.phone;
         this.events.emit('contact:submit');

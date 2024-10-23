@@ -4,18 +4,14 @@ import { IEvents } from '../base/events';
 export class Modal {
 	protected closeButton: HTMLButtonElement;
 	protected content: HTMLElement;
-    protected container: HTMLElement;
     protected events: IEvents;
     protected page: HTMLElement;
     
-	constructor(container: HTMLElement, page: HTMLElement, events: IEvents) {
+	constructor(protected container: HTMLElement, page: HTMLElement, events: IEvents) {
         this.events = events;
         this.page = page;
 	
-		this.closeButton = ensureElement<HTMLButtonElement>(
-			'.modal__close',
-			container
-		);
+		this.closeButton = ensureElement<HTMLButtonElement>('.modal__close',container);
 		this.content = ensureElement<HTMLElement>('.modal__content', container);
 		this.closeButton.addEventListener('click', this.close.bind(this));
 		this.container.addEventListener('mousedown', (evt) => {

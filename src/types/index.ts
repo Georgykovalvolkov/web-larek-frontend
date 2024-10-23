@@ -22,8 +22,8 @@ export interface IProductsData {
 }
 
 export interface IUSerData {
-    setPaymentAndDelivery(form: TPayData): void
-    setContactInfo(form: TEmailData): void
+    setPaymentAndDelivery(form: Record<string, string>): void
+    setContactInfo(form: Record<string, string>): void
     clearData(): void;
     getUserData(): TUserData;
 }
@@ -40,10 +40,6 @@ export interface IBasket {
 export type TPayMethod = 'cash' | 'card';
 
 export type TUserData = Pick<IOrder, 'email' | 'phone' | 'address' | 'payment'>;
-
-export type TPayData = Pick<IOrder, 'address' | 'payment'>;
-
-export type TEmailData = Pick<IOrder, 'email' | 'phone'>;
 
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
