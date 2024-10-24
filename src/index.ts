@@ -3,19 +3,18 @@ import { ProductsData } from './components/ProductsData';
 import { UserData } from './components/UserData';
 import { BasketData } from './components/BasketData';
 import { EventEmitter } from './components/base/events';
-import { IApi, TPayMethod } from './types';
+import { IApi, IOrder } from './types';
 import { Api } from './components/base/api';
 import { API_URL, settings } from './utils/constants';
 import { AppApi } from './components/AppApi';
 import { Card } from './components/Card';
-import { IProduct } from './types';
 import { CardsCatalog } from './components/CardsCatalog';
 import { CardsBasket } from './components/CardsBasket';
 import { Modal } from './/components/common/Modal';
 import { ModalWithPayment } from './components/ModalWithPayment';
 import { ModalWithForm } from './components/ModalWithForm';
 import { ModalWithSucces } from './components/ModalWithSucces';
-import { ensureElement } from './utils/utils';
+import { cloneTemplate } from './utils/utils';
 
 const baseApi: IApi = new Api(API_URL, settings);
 const api = new AppApi(baseApi);
@@ -44,9 +43,9 @@ const basketData = new BasketData(events);
 const pageWrapper = document.querySelector('.page__wrapper') as HTMLElement;
 const modal = new Modal(modalContainer, pageWrapper, events);
 const cardsBasket = new CardsBasket(basketTemplate, events);
-const modalWithPayment = new ModalWithPayment(paymentTemplate, events);
-const modalWithForm = new ModalWithForm(formTemplate, events);
-const modalWithSucces = new ModalWithSucces(succesTemplate, events);
+const modalWithPayment = new ModalWithPayment(cloneTemplate(paymentTemplate), events);
+const modalWithForm = new ModalWithForm(cloneTemplate(formTemplate), events);
+const modalWithSucces = new ModalWithSucces(cloneTemplate(succesTemplate), events);
 
 
 
@@ -145,7 +144,28 @@ events.on('formOrder:submit', (data: { formOrder: ModalWithPayment }) => {
 	}
 });
 
+//отправка заказа на сервер
+events.on('dataOrder:post', () => {
+	const order: IOrder = {
+    items: basketData.products.map((item) => item.id),
+    total: basketData.total,
+    ...userData.getUserData()
+};
 
+	api.postOrder(order)
+		.then((data: { total: number }) => {
+			modal.render(modalWithSucces.render(data.total));
+			basketData.clearBasket();
+			userData.clearData();
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+});
+
+events.on('modalSuccess:close', () => {
+	modal.close();
+});
 
 
 

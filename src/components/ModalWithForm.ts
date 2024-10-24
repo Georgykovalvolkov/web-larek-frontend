@@ -5,13 +5,11 @@ import { cloneTemplate } from '../utils/utils';
 
 export class ModalWithForm extends Form {
 	protected inputs: NodeListOf<HTMLInputElement>;
-    protected container: HTMLFormElement; 
-    protected events: IEvents
-	constructor(template: HTMLTemplateElement, events: IEvents) {
-		super(template, events);
-		this.container = cloneTemplate(template)
 
-		this.inputs = this.container.querySelectorAll('.form__input');
+	constructor(protected container: HTMLFormElement, events: IEvents) {
+		super(container, events);
+
+		this.inputs = container.querySelectorAll('.form__input');
 		this.getValid();
 	}
 	protected getValid(): void {

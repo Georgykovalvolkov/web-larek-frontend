@@ -7,23 +7,14 @@ import { cloneTemplate } from '../utils/utils';
 export class ModalWithPayment extends Form {
 	protected input: HTMLInputElement;
 	protected payment: TPayMethod;
-    protected container: HTMLFormElement;
-    protected events: IEvents
-    
-	constructor(template: HTMLTemplateElement, events: IEvents) {
-		super(template, events);
-		this.container = cloneTemplate(template)
 
-		this.input = ensureElement<HTMLInputElement>('[name="address"]', this.container);
+	constructor(protected container: HTMLFormElement, events: IEvents) {
+		super(container, events);
+
+		this.input = ensureElement<HTMLInputElement>('[name="address"]', container);
 		this.getValid(true);
-		const cashButton = ensureElement<HTMLButtonElement>(
-			'[name="cash"]',
-			this.container
-		);
-		const cardButton = ensureElement<HTMLButtonElement>(
-			'[name="card"]',
-			this.container
-		);
+		const cashButton = ensureElement<HTMLButtonElement>('[name="cash"]',container);
+		const cardButton = ensureElement<HTMLButtonElement>('[name="card"]',container);
 		cashButton.addEventListener('click', () => {
 			this.getValid(false);
 			this.payment = 'cash';

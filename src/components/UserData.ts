@@ -32,7 +32,7 @@ export class UserData implements IUSerData {
 	}
 
     getUserData(): TUserData {
-        const UserData: TUserData = {
+    const UserData: TUserData = {
 			payment: this.payment,
 			address: this.address,
 			email: this.email,
@@ -40,5 +40,5 @@ export class UserData implements IUSerData {
 		}
 		return UserData
     }
-   
+
 }

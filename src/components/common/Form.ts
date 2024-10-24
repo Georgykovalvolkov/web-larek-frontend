@@ -5,31 +5,25 @@ import { cloneTemplate } from '../../utils/utils';
 export class Form {
 	protected submitButton: HTMLButtonElement;
 	protected inputError: HTMLElement;
-    protected container: HTMLFormElement;
-    protected events: IEvents
-	constructor(template: HTMLTemplateElement, events: IEvents) {
-        this.events = events;
-        this.container = cloneTemplate(template)
+  events: IEvents
 
-		const modalActions = ensureElement<HTMLDivElement>('.modal__actions',this.container);
-		console.log(modalActions)
+	constructor(protected container: HTMLFormElement, events: IEvents) {
+        this.events = events;
+
+		const modalActions = ensureElement<HTMLDivElement>('.modal__actions',container);
 		this.submitButton = ensureElement<HTMLButtonElement>('.button',modalActions);
-		console.log(this.submitButton)
 		this.inputError = ensureElement<HTMLElement>('.form__errors', modalActions);
-		console.log(this.inputError)
 		this.container.addEventListener('submit', (event: InputEvent) => {
 			event.preventDefault();
 			this.events.emit('formOrder:submit', { formOrder: this });
 		});
 	}
 
-	showInputError(): void {
-		console.log('Ошибка: пустое поле')
+	protected showInputError(): void {
 		this.inputError.textContent = 'Заполните пустые поля';
 		this.submitButton.disabled = true;
 	}
-	hideInputError(): void {
-		console.log('Ошибок нет')
+	protected hideInputError(): void {
 		this.inputError.textContent = '';
 		this.submitButton.disabled = false;
 	}
