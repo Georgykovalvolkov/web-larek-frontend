@@ -1,6 +1,5 @@
 import { ensureElement } from '../utils/utils';
 import { IEvents } from './base/events';
-import { cloneTemplate } from '../utils/utils';
 
 export class ModalWithSucces {
 	protected submitButton: HTMLButtonElement;

@@ -2,7 +2,6 @@ import { Form } from './common/Form';
 import { IEvents } from './base/events';
 import { TPayMethod } from '../types';
 import { ensureElement } from '../utils/utils';
-import { cloneTemplate } from '../utils/utils';
 
 export class ModalWithPayment extends Form {
 	protected input: HTMLInputElement;

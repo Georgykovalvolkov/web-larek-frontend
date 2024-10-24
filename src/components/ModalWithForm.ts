@@ -1,6 +1,5 @@
 import { Form } from './common/Form';
 import { IEvents } from './base/events';
-import { cloneTemplate } from '../utils/utils';
 
 
 export class ModalWithForm extends Form {
