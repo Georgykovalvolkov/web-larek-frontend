@@ -50,9 +50,9 @@ const modalWithSucces = new ModalWithSucces(cloneTemplate(succesTemplate), event
 
 
 //загрузка данных с сервера и рендер карточек
-Promise.all([
-	api.getProducts()])
-	.then(([products]) => {
+
+	api.getProducts()
+	.then((products) => {
 		productsData.products = products.items;
 		const cardsArray = productsData.products.map((card) => {
 			const cardInstant = new Card(cardsCatalogTemplate, events);
@@ -61,7 +61,6 @@ Promise.all([
 		});
 		const cardsContainer = new CardsCatalog(gallery);
 		cardsContainer.render(cardsArray);
-
 	})
 	.catch((err) => {
 		console.error(err);
@@ -72,27 +71,28 @@ basket.addEventListener('click', () => {
 	events.emit('basket:open');
 });
 
-//отрисовка корзины
+//перерисовка состава корзины
 
-events.on('basket:render', () => {
-	const cardsArray = basketData.products.map((card) => {
-		const cardInstant = new Card(cardBasketTemplate, events);
-		cardInstant.setData(card);
-		return cardInstant.render();
-	});
-	modal.render(cardsBasket.render(cardsArray, basketData.total));
+events.on('basket:composition:render', () => {
+  const cardsArray = basketData.products.map((card) => {
+    const cardInstant = new Card(cardBasketTemplate, events);
+    cardInstant.setData(card);
+    return cardInstant.render();
+  });
+  cardsBasket.render(cardsArray, basketData.total);
 });
 
 //открытие корзины
 
 events.on('basket:open', () => {
-	events.emit('basket:render');
-	modal.open();
+  modal.render(cardsBasket.element);
+  modal.open();
 });
 
 //подсчет количества товаров в корзине
 events.on('basket:changed', () => {
-	basketCounter.textContent = String(basketData.products.length);
+  basketCounter.textContent = String(basketData.products.length);
+  events.emit('basket:composition:render');
 });
 
 //отрисовка превью карточки
@@ -112,18 +112,21 @@ events.on('product:preview', (data: { card: Card }) => {
 
 //добавление покупки в корзину
 events.on('product:add', (data: { card: Card }) => {
-	const { card } = data;
-	basketData.addProduct(productsData.getProduct(card._id));
-	card.checkInBasket(true);
+  const { card } = data;
+  basketData.addProduct(productsData.getProduct(card._id));
+  card.checkInBasket(true);
+  events.emit('basket:composition:render');
 });
 
 //удаление покупки из корзины
 events.on('product:delete', (data: { card: Card, basket: boolean }) => {
-	const { card, basket } = data;
-	basketData.deleteProduct(card._id);
-	if (basket) {events.emit('basket:render');
-	} else {card.checkInBasket(false);
-	}
+  const { card, basket } = data;
+  basketData.deleteProduct(card._id);
+  if (basket) {
+    events.emit('basket:composition:render');
+  } else {
+    card.checkInBasket(false);
+  }
 });
 
 //оформить заказ (оплата и адрес доставки)

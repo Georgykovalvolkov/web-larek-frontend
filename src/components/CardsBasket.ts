@@ -2,10 +2,10 @@ import { ensureElement, cloneTemplate } from '../utils/utils';
 import { IEvents } from './base/events';
 
 export class CardsBasket {
-    protected element: HTMLElement;
-    protected events: IEvents;
+  element: HTMLElement;
+  protected events: IEvents;
 	protected basketButton: HTMLButtonElement;
-    protected content: HTMLElement;
+  protected content: HTMLElement;
 	protected basketPrice: HTMLSpanElement;
 	protected template: HTMLTemplateElement
 
